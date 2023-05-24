@@ -1,12 +1,18 @@
 package com.kmhoon.licensingservice.service;
 
 import com.kmhoon.licensingservice.model.License;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class LicenseService {
+
+    private final MessageSource messageSource;
 
     public License getLicense(String licenseId, String organizationId) {
         return License.builder()
@@ -19,11 +25,11 @@ public class LicenseService {
                 .build();
     }
 
-    public String createLicense(License license, String organizationId) {
+    public String createLicense(License license, String organizationId, Locale locale) {
         String responseMessage = null;
         if (license != null) {
             license.updateOrganizationId(organizationId);
-            responseMessage = String.format("create license = %s", license);
+            responseMessage = String.format(messageSource.getMessage("license.create.message", null, locale), license);
         }
         return responseMessage;
     }
@@ -32,14 +38,12 @@ public class LicenseService {
         String responseMessage = null;
         if (license != null) {
             license.updateOrganizationId(organizationId);
-            responseMessage = String.format("update license = %s", license);
+            responseMessage = String.format(messageSource.getMessage("license.update.message", null, null), license);
         }
         return responseMessage;
     }
 
     public String deleteLicense(String licenseId, String organizationId) {
-        String responseMessage = null;
-        responseMessage = String.format("delete license = %s, organization = %s", licenseId, organizationId);
-        return responseMessage;
+        return String.format(messageSource.getMessage("license.delete.message", null, null), licenseId, organizationId);
     }
 }

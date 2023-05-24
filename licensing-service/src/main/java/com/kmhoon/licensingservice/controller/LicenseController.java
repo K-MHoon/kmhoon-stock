@@ -3,8 +3,11 @@ package com.kmhoon.licensingservice.controller;
 import com.kmhoon.licensingservice.model.License;
 import com.kmhoon.licensingservice.service.LicenseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/v1/organization/{organizationId}/license")
@@ -21,8 +24,10 @@ public class LicenseController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public String createLicense(@PathVariable("organizationId") String organizationId, @RequestBody License request) {
-        return licenseService.createLicense(request, organizationId);
+    public String createLicense(@PathVariable("organizationId") String organizationId,
+                                @RequestBody License request,
+                                @RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) Locale locale) {
+        return licenseService.createLicense(request, organizationId, locale);
     }
 
     @PutMapping
