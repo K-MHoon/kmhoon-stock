@@ -2,14 +2,13 @@ package com.kmhoon.licensingservice.model;
 
 
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @ToString
 @Builder
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public final class License {
-
+public class License extends RepresentationModel<License> {
+// RepresentationModel = 모델 클래스에 링크 추가 가능하게 한다.
     private Long id;
     private String licenseId;
     private String description;
