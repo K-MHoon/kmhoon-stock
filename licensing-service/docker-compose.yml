@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  # 시작한 서비스에 레이블을 적용한다.
+  # 해당 서비스 이름은 도커 인스턴스가 시작할 때 이에 대한 DNS 엔트리가 되며,
+  # 다른 서비스가 액세스하는데 사용된다.
+  licensingservice:
+    image: kmhoon-stock/licensing-service:0.0.1-SNAPSHOT
+    ports:
+      - "8080:8080"
+    environment:
+      - "SPRING_PROFILES_ACTIVE=dev"
+    networks:
+      backend: # 서비스가 속한 네트워크 이름 지정
+        aliases:
+          - "licenseservice" # 네트워크상의 서비스에 대한 대체 호스트 이름 지정
+
+networks:
+  backend:
+    driver: bridge
