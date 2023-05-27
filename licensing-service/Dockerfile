@@ -30,3 +30,20 @@ COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 # 애플리케이션을 실행한다.
 # 컨테이너가 생성될 때 이미지의 라이선싱 서비스를 실행 대상으로 지정한다.
 ENTRYPOINT ["java", "-cp", "app:app/lib/*", "com.kmhoon.licensingservice.LicensingServiceApplication"]
+
+
+# Docker Layered Jar
+
+#FROM openjdk:17-slim as build
+#WORKDIR application
+#ARG JAR_FILE=target/*.jar
+#COPY ${JAR_FILE} application.jar
+#RUN java -Djarmode=layertools -jar application.jar extract
+#
+#FROM openjdk:17-slim
+#WORKDIR application
+#COPY --from=build application/dependencies/ ./
+#COPY --from=build application/spring-boot-loader/ ./
+#COPY --from=build application/snapshot-dependencies/ ./
+#COPY --from=build application/application/ ./
+#ENTRYPOINT ["java",  "org.springframework.boot.loader.JarLauncher" ]
