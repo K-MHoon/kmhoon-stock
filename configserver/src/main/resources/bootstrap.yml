@@ -1,5 +1,15 @@
 spring:
   application:
     name: config-server
+  profiles:
+    active: native
+
+  cloud:
+    config:
+      server:
+        native:
+          # 특정 파일 시스템 폴더에서 읽어온다.
+          search-locations: classpath:/config
+
 server:
   port: 8071
