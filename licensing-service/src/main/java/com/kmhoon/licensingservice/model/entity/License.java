@@ -1,4 +1,4 @@
-package com.kmhoon.licensingservice.model;
+package com.kmhoon.licensingservice.model.entity;
 
 
 import jakarta.persistence.Column;
@@ -20,7 +20,6 @@ public class License extends RepresentationModel<License> {
 
     @Id
     @Column(name = "license_id", nullable = false)
-    private Long id;
     private String licenseId;
     private String description;
     @Column(name = "organization_id", nullable = false)
