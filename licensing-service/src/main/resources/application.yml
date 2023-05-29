@@ -2,11 +2,15 @@ management:
   endpoints:
     web:
       base-path: /
+      exposure:
+        include: "*"
     enabled-by-default: false
   endpoint:
     health:
       enabled: true
       show-details: always
+    env:
+      enabled: true
   health:
     db:
       enabled: false

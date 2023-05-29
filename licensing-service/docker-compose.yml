@@ -9,6 +9,7 @@ services:
       - "8080:8080"
     environment:
       - "SPRING_PROFILES_ACTIVE=dev"
+      - "SPRING_CLOUD_CONFIG_URI=http://localhost:8071"
     networks:
       backend: # 서비스가 속한 네트워크 이름 지정
         aliases:
