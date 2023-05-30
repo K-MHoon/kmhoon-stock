@@ -31,10 +31,6 @@ public class License extends RepresentationModel<License> {
     @Column(name = "comment")
     private String comment;
 
-    public void updateOrganizationId(String organizationId) {
-        this.organizationId = organizationId;
-    }
-
     public License withComment(String comment) {
         this.comment = comment;
         return this;
