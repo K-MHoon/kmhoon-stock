@@ -2,14 +2,33 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native
-
+    active: native #, git, vault
   cloud:
     config:
       server:
         native:
           # 특정 파일 시스템 폴더에서 읽어온다.
           search-locations: classpath:/config
-
+        git:
+          uri: https://github.com/K-MHoon/spring-cloud-config.git
+          search-paths: licensingservice
+        vault:
+          port: 8200
+          host: localhost
+          profile-separator: /
+          backend: licensing-service
+          kv-version: 2
+          scheme: http
+          authentication: TOKEN
+          token:
 server:
   port: 8071
+
+encrypt:
+  key:
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
