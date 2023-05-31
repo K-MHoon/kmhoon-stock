@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: eureka-server
+  boot:
+    admin:
+      context-path: /admin
+server:
+  port: 8070
+eureka:
+  instance:
+    hostname: eurekaserver
+  client:
+    registerWithEureka: false # 컨피그 서버가 유레카 서비스에 등록하지 않도록 구성
+    fetchRegistry: false # 컨피그 서버가 캐시 레지스트리 정보를 로컬에 캐시하지 않도록 구성
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/ # 모든 클라이언트에 대한 서비스 URL 제공
+  server:
+    waitTimeInMsWhenSyncEmpty: 5 # 서버가 요청을 받기 전 초기 대기 시간 설정
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
