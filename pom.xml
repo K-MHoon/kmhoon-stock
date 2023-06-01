@@ -18,6 +18,7 @@
         <module>licensing-service</module>
         <module>configserver</module>
         <module>eurekaserver</module>
+        <module>organiztion-service</module>
     </modules>
     <properties>
         <java.version>17</java.version>
