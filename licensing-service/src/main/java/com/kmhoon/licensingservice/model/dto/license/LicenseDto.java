@@ -1,4 +1,4 @@
-package com.kmhoon.licensingservice.model.dto;
+package com.kmhoon.licensingservice.model.dto.license;
 
 import com.kmhoon.licensingservice.model.entity.License;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,9 +1,13 @@
 package com.kmhoon.licensingservice.service;
 
 import com.kmhoon.licensingservice.configuration.ServiceConfig;
-import com.kmhoon.licensingservice.model.dto.LicenseDto;
+import com.kmhoon.licensingservice.model.dto.license.LicenseDto;
+import com.kmhoon.licensingservice.model.dto.organization.Organization;
 import com.kmhoon.licensingservice.model.entity.License;
 import com.kmhoon.licensingservice.repository.LicenseRepository;
+import com.kmhoon.licensingservice.service.client.OrganizationDiscoveryClient;
+import com.kmhoon.licensingservice.service.client.OrganizationFeignClient;
+import com.kmhoon.licensingservice.service.client.OrganizationRestTemplateClient;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -19,12 +23,28 @@ public class LicenseService {
     private final MessageSource messageSource;
     private final LicenseRepository licenseRepository;
     private final ServiceConfig serviceConfig;
+    private final OrganizationFeignClient organizationFeignClient;
+    private final OrganizationRestTemplateClient organizationRestTemplateClient;
+    private final OrganizationDiscoveryClient organizationDiscoveryClient;
 
     @Transactional
-    public License getLicense(String licenseId, String organizationId) {
+    public License getLicense(String licenseId, String organizationId, String clientType) {
         License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format(messageSource.getMessage("license.search.error.message", null, null), licenseId, organizationId)));
+        Organization organization = retrieveOrganizationInfo(organizationId, clientType);
+        if(organization != null) {
+            license.updateOrganization(organization);
+        }
         return license.withComment(serviceConfig.getProperty());
+    }
+
+    private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
+        return switch (clientType) {
+            case "feign" -> organizationFeignClient.getOrganization(organizationId);
+            case "rest" -> organizationRestTemplateClient.getOrganization(organizationId);
+            case "discovery" -> organizationDiscoveryClient.getOrganization(organizationId);
+            default -> organizationRestTemplateClient.getOrganization(organizationId);
+        };
     }
 
     @Transactional

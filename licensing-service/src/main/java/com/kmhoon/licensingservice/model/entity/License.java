@@ -1,10 +1,8 @@
 package com.kmhoon.licensingservice.model.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.kmhoon.licensingservice.model.dto.organization.Organization;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -30,6 +28,13 @@ public class License extends RepresentationModel<License> {
     private String licenseType;
     @Column(name = "comment")
     private String comment;
+
+    @Transient
+    private Organization organization;
+
+    public void updateOrganization(Organization organization) {
+        this.organization = organization;
+    }
 
     public License withComment(String comment) {
         this.comment = comment;

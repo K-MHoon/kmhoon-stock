@@ -1,6 +1,6 @@
 package com.kmhoon.licensingservice.controller;
 
-import com.kmhoon.licensingservice.model.dto.LicenseDto;
+import com.kmhoon.licensingservice.model.dto.license.LicenseDto;
 import com.kmhoon.licensingservice.model.entity.License;
 import com.kmhoon.licensingservice.service.LicenseService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class LicenseController {
     @GetMapping("/{licenseId}")
     @ResponseStatus(HttpStatus.OK)
     public License getLicense(@PathVariable("organizationId") String organizationId, @PathVariable("licenseId") String licenseId) {
-        License license = licenseService.getLicense(licenseId, organizationId);
+        License license = licenseService.getLicense(licenseId, organizationId, "");
         license.add(
                 linkTo(methodOn(LicenseController.class) // linkTo = 루트 매핑, methodOn = 대상 메서드 더미 호출
                         .getLicense(organizationId, license.getLicenseId()))
@@ -38,6 +38,14 @@ public class LicenseController {
                         .withRel("deleteLicense"));
 
         return license;
+    }
+
+    @GetMapping("/{licenseId}/{clientType}")
+    public License getLicenseWithClient(@PathVariable("organizationId") String organizationId,
+                                        @PathVariable("licenseId") String licenseId,
+                                        @PathVariable("clientType") String clientType) {
+
+        return licenseService.getLicense(licenseId, organizationId, clientType);
     }
 
     @PostMapping

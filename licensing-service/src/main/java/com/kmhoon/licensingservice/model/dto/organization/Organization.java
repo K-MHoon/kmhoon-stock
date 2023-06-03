@@ -1,5 +1,6 @@
 package com.kmhoon.licensingservice.model.dto.organization;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Getter
 @Setter
 @ToString
+@Builder
 public class Organization extends RepresentationModel<Organization> {
 
     private String id;
