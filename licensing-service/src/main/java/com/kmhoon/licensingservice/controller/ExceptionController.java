@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import static java.util.Collections.singletonMap;
 
 @RestControllerAdvice
-@EnableWebMvc
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { Exception.class })
