@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.concurrent.TimeoutException;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -61,5 +64,10 @@ public class LicenseController {
     @DeleteMapping("/{licenseId}")
     public ResponseEntity<String> deleteLicense(@PathVariable("licenseId") String licenseId) {
         return ResponseEntity.ok(licenseService.deleteLicense(licenseId));
+    }
+
+    @GetMapping
+    public List<License> getLicenses(@PathVariable("organizationId") String organizationId) throws TimeoutException {
+        return licenseService.getLicensesByOrganization(organizationId);
     }
 }

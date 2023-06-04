@@ -8,16 +8,22 @@ import com.kmhoon.licensingservice.repository.LicenseRepository;
 import com.kmhoon.licensingservice.service.client.OrganizationDiscoveryClient;
 import com.kmhoon.licensingservice.service.client.OrganizationFeignClient;
 import com.kmhoon.licensingservice.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeoutException;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class LicenseService {
 
     private final MessageSource messageSource;
@@ -80,5 +86,27 @@ public class LicenseService {
         License license = licenseRepository.findById(licenseId).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 License ID 입니다."));
         licenseRepository.delete(license);
         return String.format(messageSource.getMessage("license.delete.message", null, null), licenseId);
+    }
+
+    @Transactional(readOnly = true)
+    @CircuitBreaker(name = "licenseService")
+    public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
+        randomRunLong();
+        return licenseRepository.findByOrganizationId(organizationId);
+    }
+
+    private void randomRunLong() throws TimeoutException {
+        Random random = new Random();
+        int randomNum = random.nextInt(3) + 1;
+        if (randomNum == 3) sleep();
+    }
+
+    private void sleep() throws TimeoutException {
+        try {
+            Thread.sleep(1000);
+            throw new TimeoutException();
+        } catch (InterruptedException e) {
+            log.error(e.getMessage());
+        }
     }
 }
