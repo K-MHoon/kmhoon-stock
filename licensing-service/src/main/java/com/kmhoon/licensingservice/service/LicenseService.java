@@ -16,6 +16,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -89,10 +90,21 @@ public class LicenseService {
     }
 
     @Transactional(readOnly = true)
-    @CircuitBreaker(name = "licenseService")
+    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
         randomRunLong();
         return licenseRepository.findByOrganizationId(organizationId);
+    }
+
+    private List<License> buildFallbackLicenseList(String organizationId, Throwable t) {
+        List<License> fallbackList = new ArrayList<>();
+        License license = License.builder()
+                .licenseId("0000000-00-00000")
+                .organizationId(organizationId)
+                .productName("이용가능한 라이센스 정보가 없습니다.")
+                .build();
+        fallbackList.add(license);
+        return fallbackList;
     }
 
     private void randomRunLong() throws TimeoutException {
