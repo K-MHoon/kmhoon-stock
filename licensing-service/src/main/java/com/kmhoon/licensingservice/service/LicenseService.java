@@ -8,6 +8,7 @@ import com.kmhoon.licensingservice.repository.LicenseRepository;
 import com.kmhoon.licensingservice.service.client.OrganizationDiscoveryClient;
 import com.kmhoon.licensingservice.service.client.OrganizationFeignClient;
 import com.kmhoon.licensingservice.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +92,7 @@ public class LicenseService {
 
     @Transactional(readOnly = true)
     @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+    @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.THREADPOOL, fallbackMethod = "buildFallbackLicenseList")
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
         randomRunLong();
         return licenseRepository.findByOrganizationId(organizationId);
