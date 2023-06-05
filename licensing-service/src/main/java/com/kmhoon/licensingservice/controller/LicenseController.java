@@ -3,7 +3,9 @@ package com.kmhoon.licensingservice.controller;
 import com.kmhoon.licensingservice.model.dto.license.LicenseDto;
 import com.kmhoon.licensingservice.model.entity.License;
 import com.kmhoon.licensingservice.service.LicenseService;
+import com.kmhoon.licensingservice.utils.UserContextHolder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/v1/organization/{organizationId}/license")
 @RequiredArgsConstructor
+@Slf4j
 public class LicenseController {
 
     private final LicenseService licenseService;
@@ -68,6 +71,7 @@ public class LicenseController {
 
     @GetMapping
     public List<License> getLicenses(@PathVariable("organizationId") String organizationId) throws TimeoutException {
+        log.debug("LicenseServiceController Correlation Id = {}", UserContextHolder.getContext().getCorrelationId());
         return licenseService.getLicensesByOrganization(organizationId);
     }
 }

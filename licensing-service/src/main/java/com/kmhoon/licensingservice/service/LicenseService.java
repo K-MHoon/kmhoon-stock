@@ -99,6 +99,8 @@ public class LicenseService {
     @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
     @RateLimiter(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
     public List<License> getLicensesByOrganization(String organizationId) throws TimeoutException {
+        log.debug("getLicensesByOrganization Correlation Id: {}",
+                UserContextHolder.getContext().getCorrelationId());
         randomRunLong();
         return licenseRepository.findByOrganizationId(organizationId);
     }
