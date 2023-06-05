@@ -19,6 +19,7 @@
         <module>configserver</module>
         <module>eurekaserver</module>
         <module>organiztion-service</module>
+        <module>gatewayserver</module>
     </modules>
     <properties>
         <java.version>17</java.version>
