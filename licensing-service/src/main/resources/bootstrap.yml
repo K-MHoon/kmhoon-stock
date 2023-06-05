@@ -8,39 +8,47 @@ spring:
       uri: http://localhost:8071
 
 resilience4j.circuitbreaker:
-    instances:
-      licenseService:
-        register-health-indicator: true
-        sliding-window-size: 5
-        permitted-number-of-calls-in-half-open-state: 3
-        wait-duration-in-open-state: 10s
-        failure-rate-threshold: 50
-        minimum-number-of-calls: 10
-        record-exceptions:
-          - java.util.concurrent.TimeoutException
-          - java.io.IOException
-      organizationService:
-        register-health-indicator: true
-        sliding-window-size: 6
-        permitted-number-of-calls-in-half-open-state: 4
-        wait-duration-in-open-state: 20s
-        failure-rate-threshold: 60
+  instances:
+    licenseService:
+      register-health-indicator: true
+      sliding-window-size: 5
+      permitted-number-of-calls-in-half-open-state: 3
+      wait-duration-in-open-state: 10s
+      failure-rate-threshold: 50
+      minimum-number-of-calls: 10
+      record-exceptions:
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+    organizationService:
+      register-health-indicator: true
+      sliding-window-size: 6
+      permitted-number-of-calls-in-half-open-state: 4
+      wait-duration-in-open-state: 20s
+      failure-rate-threshold: 60
 resilience4j.bulkhead:
-    instances:
-      bulkheadLicenseService:
-        max-wait-duration: 10ms # 스레드를 차단할 최대 시간
-        max-concurrent-calls: 20 # 최대 동시 호출 수
+  instances:
+    bulkheadLicenseService:
+      max-wait-duration: 10ms # 스레드를 차단할 최대 시간
+      max-concurrent-calls: 20 # 최대 동시 호출 수
 resilience4j.thread-pool-bulkhead:
-    instances:
-      bulkheadLicenseService:
-        max-thread-pool-size: 1 # 스레드 풀에서 최대 스레드 수
-        core-thread-pool-size: 1 # 코어 스레드 풀 크기
-        queue-capacity: 1 # 큐 용량
-        keep-alive-duration: 20ms # 유휴 스레드가 종료되기 전 새 태스크를 기다리는 최대 시간
+  instances:
+    bulkheadLicenseService:
+      max-thread-pool-size: 1 # 스레드 풀에서 최대 스레드 수
+      core-thread-pool-size: 1 # 코어 스레드 풀 크기
+      queue-capacity: 1 # 큐 용량
+      keep-alive-duration: 20ms # 유휴 스레드가 종료되기 전 새 태스크를 기다리는 최대 시간
 resilience4j.retry:
-    instances:
-      retryLicenseService:
-        max-attempts: 5 # 재시도 최대 횟수
-        wait-duration: 10000 # 재시도 간 대기 시간
-        retry-exceptions: # 재시도 대상이 되는 예외 목록
-          - java.util.concurrent.TimeoutException
+  instances:
+    retryLicenseService:
+      max-attempts: 5 # 재시도 최대 횟수
+      wait-duration: 10000 # 재시도 간 대기 시간
+      retry-exceptions: # 재시도 대상이 되는 예외 목록
+        - java.util.concurrent.TimeoutException
+resilience4j.ratelimiter:
+  instances:
+    licenseService:
+      timeout-duration: 1000ms # 스레드가 허용을 기다리는 시간
+      limit-refresh-period: 5000 # 갱신 제한 기간 정의
+      limit-for-period: 5 # 갱신 제한 기간 동안 가용한 허용 수
+
+
