@@ -2,6 +2,8 @@ package com.kmhoon.gatewayserver.filters;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
+import org.json.JSONObject;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.annotation.Order;
@@ -38,6 +40,7 @@ public class TrackingFilter implements GlobalFilter {
             exchange = filterUtils.setCorrelationId(exchange, correlationId);
             log.debug("tmx-correlation-id generated in tracking filter = {}", filterUtils.getCorrelationId(requestHeaders));
         }
+        System.out.println("The authentication name from the token is : " + getUsername(requestHeaders));
         return chain.filter(exchange);
     }
 
@@ -50,5 +53,29 @@ public class TrackingFilter implements GlobalFilter {
 
     private String generateCorrelationId() {
         return UUID.randomUUID().toString();
+    }
+
+    private String getUsername(HttpHeaders requestHeaders) {
+        String username = "";
+        String token = filterUtils.getAuthToken(requestHeaders);
+        if (token != null){
+            String authToken = token.replace("Bearer ","");
+            JSONObject jsonObj = decodeJWT(authToken);
+            try {
+                username = jsonObj.getString("preferred_username");
+            }catch(Exception e) {
+                log.debug(e.getMessage());
+            }
+        }
+        return username;
+    }
+
+    private JSONObject decodeJWT(String JWTToken) {
+        String[] split_string = JWTToken.split("\\.");
+        String base64EncodedBody = split_string[1];
+        Base64 base64Url = new Base64(true);
+        String body = new String(base64Url.decode(base64EncodedBody));
+        JSONObject jsonObj = new JSONObject(body);
+        return jsonObj;
     }
 }
