@@ -1,5 +1,6 @@
 package com.kmhoon.licensingservice.configuration;
 
+import com.kmhoon.licensingservice.utils.KeyCloakRestTemplateInterceptor;
 import com.kmhoon.licensingservice.utils.UserContextInterceptor;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,9 +26,9 @@ public class RestTemplateConfig {
         List<ClientHttpRequestInterceptor> interceptors =
                 restTemplate.getInterceptors();
         if(interceptors == null) {
-            restTemplate.setInterceptors(Collections.singletonList(new UserContextInterceptor()));
+            restTemplate.setInterceptors(Arrays.asList(new UserContextInterceptor(), new KeyCloakRestTemplateInterceptor()));
         } else {
-            interceptors.add(new UserContextInterceptor());
+            interceptors.addAll(Arrays.asList(new UserContextInterceptor(), new KeyCloakRestTemplateInterceptor()));
             restTemplate.setInterceptors(interceptors);
         }
         return restTemplate;
