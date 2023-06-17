@@ -46,7 +46,7 @@ public class LicenseService {
         if(organization != null) {
             license.updateOrganization(organization);
         }
-        return license.withComment(serviceConfig.getProperty());
+        return license.withComment(serviceConfig.getExampleProperty());
     }
 
     private Organization retrieveOrganizationInfo(String organizationId, String clientType) {
@@ -69,7 +69,7 @@ public class LicenseService {
                 .build();
 
         licenseRepository.save(license);
-        return license.withComment(serviceConfig.getProperty());
+        return license.withComment(serviceConfig.getExampleProperty());
     }
 
     @Transactional
@@ -83,7 +83,7 @@ public class LicenseService {
                 .build();
 
         licenseRepository.save(license);
-        return license.withComment(serviceConfig.getProperty());
+        return license.withComment(serviceConfig.getExampleProperty());
     }
 
     @Transactional
