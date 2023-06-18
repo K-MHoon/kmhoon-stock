@@ -57,3 +57,5 @@ logging:
     com.netflix: WARN
     org.springframework.web: WARN
     com.kmhoon: DEBUG
+  pattern:
+    level: ${spring.application.name:},%X{traceId:-},%X{spanId:-}
