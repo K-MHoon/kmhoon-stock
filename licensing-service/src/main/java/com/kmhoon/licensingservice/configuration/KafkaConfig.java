@@ -13,6 +13,17 @@ public class KafkaConfig {
 
     @Bean
     public Consumer<OrganizationChangeModel> loggerSink() {
-        return orgChange -> log.info("Received an {} event for organization Id {}", orgChange.getAction(), orgChange.getOrganizationId());
+        return orgChange -> {
+
+            log.debug("Received a message of type " + orgChange.getType());
+
+            switch (orgChange.getAction()) {
+                case "GET" -> log.debug("Received a GET event from the organization service for organization id {}", orgChange.getOrganizationId());
+                case "SAVE" -> log.debug("Received a SAVE event from the organization service for organization id {}", orgChange.getOrganizationId());
+                case "UPDATE" -> log.debug("Received a UPDATE event from the organization service for organization id {}", orgChange.getOrganizationId());
+                case "DELETE" -> log.debug("Received a DELETE event from the organization service for organization id {}", orgChange.getOrganizationId());
+                default -> log.error("Received an UNKNOWN event from the organization service of type {}", orgChange.getType());
+            }
+        };
     }
 }
